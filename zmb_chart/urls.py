@@ -47,7 +47,7 @@ from chart.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r"", hotwater, name="hotwater"),
+    path('/', hotwater, name="hotwater"),
     re_path(r"^hotwater$", hotwater, name="hotwater"),
     re_path(r"^mashlauter$", mashlauter, name="mashlauter"),
     re_path(r"^wortkettle$", wortkettle, name="wortkettle"),
