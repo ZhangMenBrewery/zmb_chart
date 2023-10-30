@@ -1,0 +1,11 @@
+<!--index.html-->
+{% extends 'base.html' %}
+{% block title %} ZMB {% endblock %}
+{% block headmessage %}
+    <h3 style="font-family: sans-serif;">酒單</h3>
+{% endblock %}
+{% block content %}
+    {% for mybeer in beers %}
+        <p style="font-family: Arial, Helvetica, sans-serif;">{{mybeer.cName}}</p>
+    {% endfor %}
+{% endblock %}
