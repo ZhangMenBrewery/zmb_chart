@@ -1,4 +1,5 @@
 {% load bootstrap5 %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-tw">
 
@@ -8,93 +9,137 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="refresh" content="300" />
     {% bootstrap_css %}
-    <!-- <link rel="stylesheet" href="../contrast-bootstrap-pro/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../contrast-bootstrap-pro/css/cdb.css" />
-    <script src="../contrast-bootstrap-pro/js/cdb.js"></script>
-    <script src="../contrast-bootstrap-pro/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/9d1d9a82d2.js" crossorigin="anonymous"></script> -->
-
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    
     <title>掌門汐止酒廠</title>
+    <style>
+        /* 固定頂部導航選單 */
+        .nav-tabs {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: #fff;
+            width: 100%;
+        }
+        /* 為頁面內容添加頂部間距，避免被固定導航遮擋 */
+        .card {
+            padding-top: 60px;
+        }
+        /* 固定頂部導航選單 */
+        .nav-tabs {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #fff;
+        }
+        .chart-container {
+            width: 100%;
+            min-height: 400px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .chart-loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+    </style>
 </head>
-<style>
-    .chart-container {
-        width: 100%;
-        height: 100%;
-        margin: auto;
-    }
-</style>
 
 <body>
     <div class="card text-center">
-        <div class="card-header">
-          <ul class="nav nav-tabs card-header-tabs">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'hotwater' %}">熱水罐</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'mashlauter' %}">糖化鍋</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'wortkettle' %}">煮沸鍋</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'icewater' %}">冰水罐</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'glycol' %}">冷媒罐1-2</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv' %}">發酵罐</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv1_2' %}">發酵罐1-2</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv3_4' %}">發酵罐3-4</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="true" href="{% url 'fv5_6' %}">發酵罐5-6</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv7_8' %}">發酵罐7-8</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv9_10' %}">發酵罐9-10</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv11_12' %}">發酵罐11-12</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv13_14' %}">發酵罐13-14</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv15_16' %}">發酵罐15-16</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv17_18' %}">發酵罐17-18</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv19_20' %}">發酵罐19-20</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'fv21_22' %}">發酵罐21-22</a>
-            </li>
-          </ul>
-        </div>
-        <div class="card-body">
-            {% autoescape off %}
-            {{ FV5 }}
-            {% endautoescape %}
-        </div>
-        <div class="card-body">
-          {% autoescape off %}
-          {{ FV6 }}
-          {% endautoescape %}
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'hotwater' %}">熱水罐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'mashlauter' %}">糖化鍋</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'wortkettle' %}">煮沸鍋</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'icewater' %}">冰水罐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'glycol' %}">冷媒罐 1-2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv' %}">發酵罐</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv1_2' %}">發酵罐 1-2</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv3_4' %}">發酵罐 3-4</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="true" href="{% url 'fv5_6' %}">發酵罐 5-6</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv7_8' %}">發酵罐 7-8</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv9_10' %}">發酵罐 9-10</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv11_12' %}">發酵罐 11-12</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv13_14' %}">發酵罐 13-14</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv15_16' %}">發酵罐 15-16</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv17_18' %}">發酵罐 17-18</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv19_20' %}">發酵罐 19-20</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fv21_22' %}">發酵罐 21-22</a>
+          </li>
+        </ul>
       </div>
+      <div class="card-body">
+        <!-- FV5 圖表容器 - 使用懶加載 -->
+        <div id="fv5-chart" class="chart-container" data-render="renderFvChart" data-config='{"fvNumber": 5, "days": 180}'>
+          <div class="chart-loading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>載入圖表中...</p>
+          </div>
+        </div>
+        <!-- FV6 圖表容器 - 使用懶加載 -->
+        <div id="fv6-chart" class="chart-container" data-render="renderFvChart" data-config='{"fvNumber": 6, "days": 180}'>
+          <div class="chart-loading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>載入圖表中...</p>
+          </div>
+        </div>
       </div>
+    </div>
+    
     {% bootstrap_javascript %}
+    
+    <!-- 圖表渲染腳本 -->
+    <script src="{% static 'chart/js/chart_renderer.js' %}"></script>
+    <script>
+      // 頁面加載後初始化懶加載觀察器
+      document.addEventListener('DOMContentLoaded', function() {
+        ChartRenderer.setupLazyLoading();
+      });
+    </script>
 </body>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js">
-</script>
 </html>

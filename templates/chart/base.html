@@ -11,12 +11,27 @@
     <link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css ">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
     {% bootstrap_css %}
+    <style>
+        /* 固定頂部導航欄 */
+        .navbar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030;
+            width: 100%;
+        }
+        /* 為頁面內容添加頂部間距，避免被固定導航欄遮擋 */
+        body {
+            padding-top: 56px;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark border border-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark border border-dark bg-dark navbar-fixed-top">
       <div class="container">
-        {% include 'header.html' %}  
+        {% include 'header.html' %}
       </div>
     </nav>
     <section class="bg-light pt-5 pb-5">
