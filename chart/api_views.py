@@ -2,6 +2,7 @@
 from django.http import JsonResponse
 from django.core.cache import cache
 from django.db.models import Q
+from django.utils import timezone
 from .models import (
     PlcHotwater, PlcMashlauter, PlcWortkettle, PlcIcewater,
     PlcGlycol1, PlcGlycol2,
@@ -10,15 +11,17 @@ from .models import (
     PlcFv13, PlcFv14, PlcFv15, PlcFv16, PlcFv17, PlcFv18,
     PlcFv19, PlcFv20, PlcFv21, PlcFv22
 )
-from datetime import datetime, timedelta
-import json
+from datetime import datetime, timedelta, timezone as tz
+import pytz
 
 
 def get_data_range(request):
     """獲取數據時間範圍參數"""
     days = int(request.GET.get('days', 30))
-    start_time = datetime.now() - timedelta(days=days)
-    end_time = datetime.now()
+    # 使用 timezone.now() 獲取帶時區的當前時間 (UTC+8)
+    now = timezone.now()
+    start_time = now - timedelta(days=days)
+    end_time = now
     return start_time, end_time
 
 
@@ -31,21 +34,33 @@ def hotwater_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         queryset = PlcHotwater.objects.filter(
-            timestamp__gte=start_time, 
+            timestamp__gte=start_time,
             timestamp__lte=end_time
         ).order_by('timestamp').values(
             'timestamp', 'temperature', 'setpoint', 'valve', 'volume', 'pump'
         )
         
+        # 處理時區：Django 將 naive datetime 轉換為 UTC 返回，需要轉換回台灣時間
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                # 假設返回的時間是 UTC，轉換為台灣時間
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         data = {
-            'timestamps': [item['timestamp'].isoformat() for item in queryset],
+            'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
             'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
             'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
             'valve': [float(item['valve']) if item['valve'] else 0 for item in queryset],
             'volume': [float(item['volume']) if item['volume'] else 0 for item in queryset],
             'pump': [float(item['pump']) if item['pump'] else 0 for item in queryset],
         }
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -61,15 +76,25 @@ def mashlauter_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         queryset = PlcMashlauter.objects.filter(
-            timestamp__gte=start_time, 
+            timestamp__gte=start_time,
             timestamp__lte=end_time
         ).order_by('timestamp').values(
-            'timestamp', 'temperature', 'setpoint', 'valve', 'pump', 
+            'timestamp', 'temperature', 'setpoint', 'valve', 'pump',
             'pumpspeed', 'agitator', 'agitatorspeed', 'flowmeter'
         )
         
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         data = {
-            'timestamps': [item['timestamp'].isoformat() for item in queryset],
+            'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
             'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
             'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
             'valve': [float(item['valve']) if item['valve'] else 0 for item in queryset],
@@ -79,7 +104,7 @@ def mashlauter_api(request):
             'agitatorspeed': [float(item['agitatorspeed']) if item['agitatorspeed'] else 0 for item in queryset],
             'flowmeter': [float(item['flowmeter']) if item['flowmeter'] else 0 for item in queryset],
         }
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -95,15 +120,25 @@ def wortkettle_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         queryset = PlcWortkettle.objects.filter(
-            timestamp__gte=start_time, 
+            timestamp__gte=start_time,
             timestamp__lte=end_time
         ).order_by('timestamp').values(
             'timestamp', 'temperature', 'setpoint', 'valve1', 'valve2',
             'chimneytemperature', 'pump', 'pumpspeed', 'flowmeter', 'flowvolume'
         )
         
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         data = {
-            'timestamps': [item['timestamp'].isoformat() for item in queryset],
+            'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
             'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
             'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
             'valve1': [float(item['valve1']) if item['valve1'] else 0 for item in queryset],
@@ -114,7 +149,7 @@ def wortkettle_api(request):
             'flowmeter': [float(item['flowmeter']) if item['flowmeter'] else 0 for item in queryset],
             'flowvolume': [float(item['flowvolume']) if item['flowvolume'] else 0 for item in queryset],
         }
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -130,18 +165,28 @@ def icewater_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         queryset = PlcIcewater.objects.filter(
-            timestamp__gte=start_time, 
+            timestamp__gte=start_time,
             timestamp__lte=end_time
         ).order_by('timestamp').values(
             'timestamp', 'volume', 'pump'
         )
         
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         data = {
-            'timestamps': [item['timestamp'].isoformat() for item in queryset],
+            'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
             'volume': [float(item['volume']) if item['volume'] else 0 for item in queryset],
             'pump': [float(item['pump']) if item['pump'] else 0 for item in queryset],
         }
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -165,6 +210,16 @@ def glycol_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         # 根據冷媒罐編號選擇正確的字段
         if tank == '1':
             queryset = ModelClass.objects.filter(
@@ -184,7 +239,7 @@ def glycol_api(request):
         # 處理 cooler1/cooler2 字段
         if tank == '1':
             data = {
-                'timestamps': [item['timestamp'].isoformat() for item in queryset],
+                'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
                 'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
                 'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
                 'cooler1': [float(item['cooler1']) if item['cooler1'] else 0 for item in queryset],
@@ -193,14 +248,14 @@ def glycol_api(request):
             }
         else:
             data = {
-                'timestamps': [item['timestamp'].isoformat() for item in queryset],
+                'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
                 'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
                 'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
                 'cooler1': [float(item['cooler1']) if item['cooler1'] else 0 for item in queryset],
                 'cooler2': [float(item['cooler2']) if item['cooler2'] else 0 for item in queryset],
                 'pump': [float(item['pump']) if item['pump'] else 0 for item in queryset],
             }
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -237,10 +292,20 @@ def fv_api(request):
     if cached_data is None:
         start_time, end_time = get_data_range(request)
         
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
         # FV17 以上有額外字段
         if fv_num >= 17:
             queryset = ModelClass.objects.filter(
-                timestamp__gte=start_time, 
+                timestamp__gte=start_time,
                 timestamp__lte=end_time
             ).order_by('timestamp').values(
                 'timestamp', 'temperature', 'setpoint', 'valve1', 'valve2',
@@ -248,7 +313,7 @@ def fv_api(request):
             )
             
             data = {
-                'timestamps': [item['timestamp'].isoformat() for item in queryset],
+                'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
                 'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
                 'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
                 'valve1': [float(item['valve1']) if item['valve1'] else 0 for item in queryset],
@@ -261,21 +326,21 @@ def fv_api(request):
             }
         else:
             queryset = ModelClass.objects.filter(
-                timestamp__gte=start_time, 
+                timestamp__gte=start_time,
                 timestamp__lte=end_time
             ).order_by('timestamp').values(
                 'timestamp', 'temperature', 'setpoint', 'valve1', 'valve2'
             )
             
             data = {
-                'timestamps': [item['timestamp'].isoformat() for item in queryset],
+                'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
                 'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
                 'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
                 'valve1': [float(item['valve1']) if item['valve1'] else 0 for item in queryset],
                 'valve2': [float(item['valve2']) if item['valve2'] else 0 for item in queryset],
             }
         
-        cache.set(cache_key, data, timeout=3600)
+        cache.set(cache_key, data, timeout=300)  # 5 分鐘緩存
     else:
         data = cached_data
     
@@ -287,32 +352,44 @@ def fv_list_api(request):
     fv_numbers = request.GET.getlist('fv[]') or request.GET.get('fvs', '1-22').split('-')
     
     result = {}
-    for fv_num in range(1, 23):
-        cache_key = f'api_fv{fv_num}_data'
-        cached_data = cache.get(cache_key)
+    cache_key = 'api_fv_list'
+    cached_data = cache.get(cache_key)
+    
+    if cached_data is None:
+        start_time, end_time = get_data_range(request)
         
-        if cached_data is None:
-            start_time, end_time = get_data_range(request)
+        def format_timestamp(ts):
+            if ts is None:
+                return None
+            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
+            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=tz.utc)
+                ts = ts.astimezone(tz(timedelta(hours=8)))
+            return ts.isoformat()
+        
+        for fv_num in range(1, 23):
             ModelClass = globals()[f'PlcFv{fv_num}']
             
             queryset = ModelClass.objects.filter(
-                timestamp__gte=start_time, 
+                timestamp__gte=start_time,
                 timestamp__lte=end_time
             ).order_by('timestamp').values(
                 'timestamp', 'temperature', 'setpoint', 'valve1', 'valve2'
             )
             
             data = {
-                'timestamps': [item['timestamp'].isoformat() for item in queryset],
+                'timestamps': [format_timestamp(item['timestamp']) for item in queryset],
                 'temperature': [float(item['temperature']) if item['temperature'] else 0 for item in queryset],
                 'setpoint': [float(item['setpoint']) if item['setpoint'] else 0 for item in queryset],
                 'valve1': [float(item['valve1']) if item['valve1'] else 0 for item in queryset],
                 'valve2': [float(item['valve2']) if item['valve2'] else 0 for item in queryset],
             }
-            cache.set(cache_key, data, timeout=3600)
-        else:
-            data = cached_data
+            
+            result[f'FV{fv_num}'] = data
         
-        result[f'FV{fv_num}'] = data
+        cache.set(cache_key, result, timeout=300)  # 5 分鐘緩存
+    else:
+        result = cached_data
     
     return JsonResponse(result)
