@@ -58,11 +58,10 @@ def hotwater(request):
     fig.add_trace(go.Scatter(name="體積",mode="lines", x=df["timestamp"], y=df["volume"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="熱水泵",mode="lines", x=df["timestamp"], y=df["pump"].multiply(1, fill_value=0), visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -104,11 +103,10 @@ def mashlauter(request):
     fig.add_trace(go.Scatter(name="攪拌",mode="lines", x=df["timestamp"], y=df["agitatorspeed"].multiply(df["agitator"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="流量",mode="lines", x=df["timestamp"], y=df["flowmeter"], visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -148,11 +146,10 @@ def wortkettle(request):
     fig.add_trace(go.Scatter(name="流速",mode="lines", x=df["timestamp"], y=df["flowmeter"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="流量",mode="lines", x=df["timestamp"], y=df["flowvolume"], visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -187,11 +184,10 @@ def icewater(request):
     fig.add_trace(go.Scatter(name="體積",mode="lines", x=df["timestamp"], y=df["volume"]))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df["timestamp"], y=df["pump"].astype(int), visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -229,11 +225,10 @@ def glycol(request):
     fig.add_trace(go.Scatter(name="製冷機#2",mode="lines", x=df1["timestamp"], y=df1["setpoint"].multiply(df1["cooler2"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df1["timestamp"], y=df1["pump"].astype(int), visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -266,11 +261,10 @@ def glycol(request):
     fig.add_trace(go.Scatter(name="製冷機",mode="lines", x=df2["timestamp"], y=df2["setpoint"].multiply(df2["cooler2"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df2["timestamp"], y=df2["pump"].astype(int), visible="legendonly"))
     _now = _now_taipei()
-    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=1), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -318,8 +312,8 @@ def fv(request):
             fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
             fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
         _now = _now_taipei()
-        fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
         fig.update_xaxes(
+        range=[_now-timedelta(days=1), _now],
         rangeslider_visible=True,
         rangeselector=dict(
             buttons=list([
@@ -366,11 +360,10 @@ def fv1_2(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -402,11 +395,10 @@ def fv1_2(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -446,11 +438,10 @@ def fv3_4(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -481,11 +472,10 @@ def fv3_4(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -504,17 +494,15 @@ def fv5_6(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV5_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv5.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -529,11 +517,10 @@ def fv5_6(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -549,8 +536,8 @@ def fv5_6(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv6.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -565,11 +552,10 @@ def fv5_6(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -588,17 +574,15 @@ def fv7_8(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV7_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv7.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -613,11 +597,10 @@ def fv7_8(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -633,8 +616,8 @@ def fv7_8(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv8.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -649,11 +632,10 @@ def fv7_8(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -672,17 +654,15 @@ def fv9_10(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV9_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv9.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -697,11 +677,10 @@ def fv9_10(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -717,8 +696,8 @@ def fv9_10(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv10.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -733,11 +712,10 @@ def fv9_10(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -756,17 +734,15 @@ def fv11_12(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV11_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv11.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -781,11 +757,10 @@ def fv11_12(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -801,8 +776,8 @@ def fv11_12(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv12.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -817,11 +792,10 @@ def fv11_12(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -840,17 +814,15 @@ def fv13_14(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV13_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv13.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -865,11 +837,10 @@ def fv13_14(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -885,8 +856,8 @@ def fv13_14(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv14.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -901,11 +872,10 @@ def fv13_14(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -924,17 +894,15 @@ def fv15_16(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV15_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv15.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -949,11 +917,10 @@ def fv15_16(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -969,8 +936,8 @@ def fv15_16(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv16.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -985,11 +952,10 @@ def fv15_16(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1008,17 +974,15 @@ def fv17_18(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV17_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv17.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1038,11 +1002,10 @@ def fv17_18(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1058,8 +1021,8 @@ def fv17_18(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv18.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1079,11 +1042,10 @@ def fv17_18(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1102,17 +1064,15 @@ def fv19_20(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV19_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv19.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1132,11 +1092,10 @@ def fv19_20(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1152,8 +1111,8 @@ def fv19_20(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv20.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1173,11 +1132,10 @@ def fv19_20(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1196,17 +1154,15 @@ def fv21_22(request):
     # 獲取時間範圍參數
     days = int(request.GET.get('days', 1))
     
-    # 獲取當前台灣時間（用於圖表時間範圍）
-    taipei_tz = pytz.timezone('Asia/Taipei')
-    now_taipei = tz.now().astimezone(taipei_tz)
+    _now = _now_taipei()
     
     cached_data = cache.get('FV21_data')
     if cached_data is not None:
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv21.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1226,11 +1182,10 @@ def fv21_22(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1246,8 +1201,8 @@ def fv21_22(request):
         df = cached_data
     else:
         # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
-        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
-        end_time = now_taipei.replace(tzinfo=None)
+        start_time = _now - timedelta(days=days)
+        end_time = _now
         queryset = PlcFv22.objects.filter(
             timestamp__gte=start_time,
             timestamp__lte=end_time
@@ -1267,11 +1222,10 @@ def fv21_22(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
+    range=[_now-timedelta(days=days), _now],
     rangeslider_visible=True,
     rangeselector=dict(
-        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
