@@ -10,6 +10,14 @@ from django.views.generic.base import TemplateView
 
 from .models import *
 from datetime import datetime, timedelta
+from django.utils import timezone as tz
+import pytz
+
+_taipei_tz = pytz.timezone('Asia/Taipei')
+
+def _now_taipei():
+    """回傳目前台灣時間（naive datetime，與資料庫格式一致）"""
+    return datetime.now(_taipei_tz).replace(tzinfo=None)
 
 import pandas as pd
 
@@ -49,10 +57,12 @@ def hotwater(request):
     fig.add_trace(go.Scatter(name="蒸氣閥",mode="lines", x=df["timestamp"], y=df["valve"].multiply(1, fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="體積",mode="lines", x=df["timestamp"], y=df["volume"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="熱水泵",mode="lines", x=df["timestamp"], y=df["pump"].multiply(1, fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -93,10 +103,12 @@ def mashlauter(request):
     fig.add_trace(go.Scatter(name="糖化泵",mode="lines", x=df["timestamp"], y=df["pumpspeed"].multiply(df["pump"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="攪拌",mode="lines", x=df["timestamp"], y=df["agitatorspeed"].multiply(df["agitator"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="流量",mode="lines", x=df["timestamp"], y=df["flowmeter"], visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -135,10 +147,12 @@ def wortkettle(request):
     fig.add_trace(go.Scatter(name="煙囪溫度",mode="lines", x=df["timestamp"], y=df["chimneytemperature"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="流速",mode="lines", x=df["timestamp"], y=df["flowmeter"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="流量",mode="lines", x=df["timestamp"], y=df["flowvolume"], visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -172,10 +186,12 @@ def icewater(request):
     fig = go.Figure()
     fig.add_trace(go.Scatter(name="體積",mode="lines", x=df["timestamp"], y=df["volume"]))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df["timestamp"], y=df["pump"].astype(int), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -212,10 +228,12 @@ def glycol(request):
     fig.add_trace(go.Scatter(name="製冷機#1",mode="lines", x=df1["timestamp"], y=df1["setpoint"].multiply(df1["cooler1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="製冷機#2",mode="lines", x=df1["timestamp"], y=df1["setpoint"].multiply(df1["cooler2"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df1["timestamp"], y=df1["pump"].astype(int), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -247,10 +265,12 @@ def glycol(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df2["timestamp"], y=df2["setpoint"]))
     fig.add_trace(go.Scatter(name="製冷機",mode="lines", x=df2["timestamp"], y=df2["setpoint"].multiply(df2["cooler2"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="馬達",mode="lines", x=df2["timestamp"], y=df2["pump"].astype(int), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    _now = _now_taipei()
+    fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -297,7 +317,8 @@ def fv(request):
             fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
             fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
             fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-        fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+        _now = _now_taipei()
+        fig.update_layout(xaxis_range=[_now-timedelta(days=1), _now])
         fig.update_xaxes(
         rangeslider_visible=True,
         rangeselector=dict(
@@ -316,23 +337,26 @@ def fv(request):
         exec(f"plots['FV{i}'] = plot(fig ,output_type='div')")
     return render(request, 'chart/fv.html', context=plots)
 
-def fv1_2(request):  
+def fv1_2(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
 
+    _now = _now_taipei()
     cached_data = cache.get('FV1_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv1.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        start_time = _now - timedelta(days=days)
+        end_time = _now
+        queryset = PlcFv1.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV1_data', df, timeout=300)
@@ -342,10 +366,11 @@ def fv1_2(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -360,15 +385,14 @@ def fv1_2(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv2.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        start_time = _now - timedelta(days=days)
+        end_time = _now
+        queryset = PlcFv2.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV2_data', df, timeout=300)
@@ -378,10 +402,11 @@ def fv1_2(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -390,25 +415,29 @@ def fv1_2(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV2'] = plot(fig ,output_type='div') 
+    plots['FV2'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv1_2.html', context=plots)
 
-def fv3_4(request):  
+def fv3_4(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    _now = _now_taipei()
     cached_data = cache.get('FV3_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv3.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        start_time = _now - timedelta(days=days)
+        end_time = _now
+        queryset = PlcFv3.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV3_data', df, timeout=300)
@@ -417,10 +446,11 @@ def fv3_4(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -435,15 +465,14 @@ def fv3_4(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv4.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        start_time = _now - timedelta(days=days)
+        end_time = _now
+        queryset = PlcFv4.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV4_data', df, timeout=300)
@@ -452,10 +481,11 @@ def fv3_4(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[_now-timedelta(days=days), _now])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -464,25 +494,33 @@ def fv3_4(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV4'] = plot(fig ,output_type='div') 
+    plots['FV4'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv3_4.html', context=plots)
 
-def fv5_6(request):  
+def fv5_6(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV5_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv5.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv5.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV5_data', df, timeout=300)
@@ -491,10 +529,11 @@ def fv5_6(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -509,15 +548,15 @@ def fv5_6(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv6.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv6.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV6_data', df, timeout=300)
@@ -526,10 +565,11 @@ def fv5_6(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -538,25 +578,33 @@ def fv5_6(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV6'] = plot(fig ,output_type='div') 
+    plots['FV6'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv5_6.html', context=plots)
 
-def fv7_8(request):  
+def fv7_8(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV7_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv7.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv7.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV7_data', df, timeout=300)
@@ -565,10 +613,11 @@ def fv7_8(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -583,15 +632,15 @@ def fv7_8(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv8.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv8.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV8_data', df, timeout=300)
@@ -600,10 +649,11 @@ def fv7_8(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -612,25 +662,33 @@ def fv7_8(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV8'] = plot(fig ,output_type='div') 
+    plots['FV8'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv7_8.html', context=plots)
 
-def fv9_10(request):  
+def fv9_10(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV9_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv9.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv9.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV9_data', df, timeout=300)
@@ -639,10 +697,11 @@ def fv9_10(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -657,15 +716,15 @@ def fv9_10(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv10.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv10.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV10_data', df, timeout=300)
@@ -674,10 +733,11 @@ def fv9_10(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -686,25 +746,33 @@ def fv9_10(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV10'] = plot(fig ,output_type='div') 
+    plots['FV10'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv9_10.html', context=plots)
 
-def fv11_12(request):  
+def fv11_12(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV11_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv11.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv11.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV11_data', df, timeout=300)
@@ -713,10 +781,11 @@ def fv11_12(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -731,15 +800,15 @@ def fv11_12(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv12.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv12.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV12_data', df, timeout=300)
@@ -748,10 +817,11 @@ def fv11_12(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -760,25 +830,33 @@ def fv11_12(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV12'] = plot(fig ,output_type='div') 
+    plots['FV12'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv11_12.html', context=plots)
 
-def fv13_14(request):  
+def fv13_14(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV13_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv13.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv13.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV13_data', df, timeout=300)
@@ -787,10 +865,11 @@ def fv13_14(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -805,15 +884,15 @@ def fv13_14(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv14.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv14.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV14_data', df, timeout=300)
@@ -822,10 +901,11 @@ def fv13_14(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -834,25 +914,33 @@ def fv13_14(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV14'] = plot(fig ,output_type='div') 
+    plots['FV14'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv13_14.html', context=plots)
 
-def fv15_16(request):  
+def fv15_16(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV15_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv15.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv15.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV15_data', df, timeout=300)
@@ -861,10 +949,11 @@ def fv15_16(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -879,15 +968,15 @@ def fv15_16(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv16.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv16.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV16_data', df, timeout=300)
@@ -896,10 +985,11 @@ def fv15_16(request):
     fig.add_trace(go.Scatter(name="設定溫度",mode="lines", x=df["timestamp"], y=df["setpoint"]))
     fig.add_trace(go.Scatter(name="上電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve1"].astype(int), fill_value=0), visible="legendonly"))
     fig.add_trace(go.Scatter(name="下電磁閥",mode="lines", x=df["timestamp"], y=df["setpoint"].multiply(df["valve2"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -908,25 +998,33 @@ def fv15_16(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV16'] = plot(fig ,output_type='div') 
+    plots['FV16'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv15_16.html', context=plots)
 
-def fv17_18(request):  
+def fv17_18(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV17_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv17.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv17.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV17_data', df, timeout=300)
@@ -940,10 +1038,11 @@ def fv17_18(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -958,15 +1057,15 @@ def fv17_18(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv18.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv18.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV18_data', df, timeout=300)
@@ -980,10 +1079,11 @@ def fv17_18(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -992,25 +1092,33 @@ def fv17_18(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV18'] = plot(fig ,output_type='div') 
+    plots['FV18'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv17_18.html', context=plots)
 
-def fv19_20(request):  
+def fv19_20(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV19_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv19.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv19.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV19_data', df, timeout=300)
@@ -1024,10 +1132,11 @@ def fv19_20(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1042,15 +1151,15 @@ def fv19_20(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv20.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv20.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV20_data', df, timeout=300)
@@ -1064,10 +1173,11 @@ def fv19_20(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1076,25 +1186,33 @@ def fv19_20(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV20'] = plot(fig ,output_type='div') 
+    plots['FV20'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv19_20.html', context=plots)
 
-def fv21_22(request):  
+def fv21_22(request):
     plots = {}
     pd.options.plotting.backend = "plotly"
+    
+    # 獲取時間範圍參數
+    days = int(request.GET.get('days', 1))
+    
+    # 獲取當前台灣時間（用於圖表時間範圍）
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    now_taipei = tz.now().astimezone(taipei_tz)
+    
     cached_data = cache.get('FV21_data')
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv21.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv21.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV21_data', df, timeout=300)
@@ -1108,10 +1226,11 @@ def fv21_22(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1126,15 +1245,15 @@ def fv21_22(request):
     if cached_data is not None:
         df = cached_data
     else:
-        # 使用 only 加載特定字段
-        queryset = PlcFv22.objects.only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('-timestamp').all()
+        # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+        start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+        end_time = now_taipei.replace(tzinfo=None)
+        queryset = PlcFv22.objects.filter(
+            timestamp__gte=start_time,
+            timestamp__lte=end_time
+        ).only('timestamp', 'temperature', 'setpoint', 'valve1', 'valve2', 'psi', 'psi_sp', 'co2vol', 'co2vol_sp', 'valve3').order_by('timestamp')
 
-        # 實現分頁
-        paginator = Paginator(queryset, 4000)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        df = pd.DataFrame(list(page_obj.object_list.values()))
+        df = pd.DataFrame(list(queryset.values()))
         
         # 將數據存儲到緩存中
         cache.set('FV22_data', df, timeout=300)
@@ -1148,10 +1267,11 @@ def fv21_22(request):
     fig.add_trace(go.Scatter(name="CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="設定CO2體積",mode="lines", x=df["timestamp"], y=df["co2vol_sp"], visible="legendonly"))
     fig.add_trace(go.Scatter(name="洩壓閥",mode="lines", x=df["timestamp"], y=df["psi_sp"].multiply(df["valve3"].astype(int), fill_value=0), visible="legendonly"))
-    fig.update_layout(xaxis_range=[datetime.today()-timedelta(days=1), datetime.today()])
+    fig.update_layout(xaxis_range=[now_taipei-timedelta(days=days), now_taipei])
     fig.update_xaxes(
     rangeslider_visible=True,
     rangeselector=dict(
+        active=0,
         buttons=list([
             dict(count=1, label="1d", step="day", stepmode="backward"),
             dict(count=7, label="1w", step="day", stepmode="backward"),
@@ -1160,7 +1280,7 @@ def fv21_22(request):
         )
     )
     fig.update_yaxes(autorange = True, fixedrange= False)
-    plots['FV22'] = plot(fig ,output_type='div') 
+    plots['FV22'] = plot(fig ,output_type='div')
     return render(request, 'chart/fv21_22.html', context=plots)
 
 

@@ -18,10 +18,14 @@ import pytz
 def get_data_range(request):
     """獲取數據時間範圍參數"""
     days = int(request.GET.get('days', 30))
-    # 使用 timezone.now() 獲取帶時區的當前時間 (UTC+8)
-    now = timezone.now()
-    start_time = now - timedelta(days=days)
-    end_time = now
+    # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+    # 使用 pytz 的 Asia/Taipei 來獲取正確的台灣時間
+    taipei_tz = pytz.timezone('Asia/Taipei')
+    # 獲取當前台灣時間
+    now_taipei = timezone.now().astimezone(taipei_tz)
+    # 資料庫中的時間是台灣時間（naive datetime），Django 設定 USE_TZ=False 不會進行時區轉換
+    start_time = (now_taipei - timedelta(days=days)).replace(tzinfo=None)
+    end_time = now_taipei.replace(tzinfo=None)
     return start_time, end_time
 
 
@@ -40,16 +44,10 @@ def hotwater_api(request):
             'timestamp', 'temperature', 'setpoint', 'valve', 'volume', 'pump'
         )
         
-        # 處理時區：Django 將 naive datetime 轉換為 UTC 返回，需要轉換回台灣時間
+        # 處理時區：Django 設定 USE_TZ=False 不會進行時區轉換
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                # 假設返回的時間是 UTC，轉換為台灣時間
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         data = {
@@ -86,11 +84,6 @@ def mashlauter_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         data = {
@@ -130,11 +123,6 @@ def wortkettle_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         data = {
@@ -174,11 +162,6 @@ def icewater_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         data = {
@@ -213,11 +196,6 @@ def glycol_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         # 根據冷媒罐編號選擇正確的字段
@@ -295,11 +273,6 @@ def fv_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         # FV17 以上有額外字段
@@ -361,11 +334,6 @@ def fv_list_api(request):
         def format_timestamp(ts):
             if ts is None:
                 return None
-            # Django 在使用 USE_TZ=True 時，會將 naive datetime 字段轉換為 UTC 返回
-            # 資料庫中的時間是台灣時間，所以需要將 UTC 時間加 8 小時轉換回台灣時間
-            if ts.tzinfo is None:
-                ts = ts.replace(tzinfo=tz.utc)
-                ts = ts.astimezone(tz(timedelta(hours=8)))
             return ts.isoformat()
         
         for fv_num in range(1, 23):
