@@ -21,8 +21,22 @@ const TIME_RANGES = {
     '6m': { days: 180, label: '6 個月' }
 };
 
-// 預設時間範圍
+// 資料載入範圍（保留完整歷史資料供按鈕切換）
 const DEFAULT_DAYS = 180;
+
+/**
+ * 根據資料的最後一筆時間戳，計算初始顯示的 1 天範圍
+ * 資料庫時間為台灣時間 naive datetime，字串操作保持一致
+ */
+function getInitialOneDayRange(timestamps) {
+    if (!timestamps || timestamps.length === 0) return undefined;
+    // 用資料最後一筆時間作為結束點，避免圖表右側出現空白
+    const lastDate = new Date(timestamps[timestamps.length - 1].slice(0, 19) + 'Z');
+    if (isNaN(lastDate.getTime())) return undefined;
+    const startDate = new Date(lastDate);
+    startDate.setDate(startDate.getDate() - 1);
+    return [startDate.toISOString(), lastDate.toISOString()];
+}
 
 /**
  * 創建 Plotly 圖表
@@ -152,13 +166,15 @@ async function renderHotwaterChart(containerId, days = DEFAULT_DAYS) {
         const layout = {
             title: '熱水罐監控',
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
@@ -232,13 +248,15 @@ async function renderMashlauterChart(containerId, days = DEFAULT_DAYS) {
         const layout = {
             title: '糖化鍋監控',
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
@@ -328,13 +346,15 @@ async function renderWortkettleChart(containerId, days = DEFAULT_DAYS) {
         const layout = {
             title: '煮沸鍋監控',
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
@@ -381,13 +401,15 @@ async function renderIcewaterChart(containerId, days = DEFAULT_DAYS) {
         const layout = {
             title: '冰水罐監控',
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
@@ -452,13 +474,15 @@ async function renderGlycolChart(containerId, tank = '1', days = DEFAULT_DAYS) {
         const layout = {
             title: `冷媒罐 ${tank} 監控`,
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
@@ -576,13 +600,15 @@ async function renderFvChart(containerId, fvNumber, days = DEFAULT_DAYS) {
         const layout = {
             title: `發酵罐 ${fvNumber} 監控`,
             xaxis: {
+                range: getInitialOneDayRange(data.timestamps),
+                autorange: false,
                 rangeselector: {
                     buttons: [
-                        { count: 1, label: '1d', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 7, label: '1w', step: 'day', stepmode: 'backward', enabled: true },
-                        { count: 30, label: '1m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 90, label: '3m', step: 'day', stepmode: 'backward', enabled: false },
-                        { count: 180, label: '6m', step: 'day', stepmode: 'backward', enabled: false },
+                        { count: 1, label: '1d', step: 'day', stepmode: 'backward' },
+                        { count: 7, label: '1w', step: 'day', stepmode: 'backward' },
+                        { count: 30, label: '1m', step: 'day', stepmode: 'backward' },
+                        { count: 90, label: '3m', step: 'day', stepmode: 'backward' },
+                        { count: 180, label: '6m', step: 'day', stepmode: 'backward' },
                         { step: 'all' }
                     ]
                 },
