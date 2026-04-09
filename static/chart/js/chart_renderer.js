@@ -50,7 +50,114 @@ function createChart(elementId, data, layout) {
         ...layout.config || {}
     };
     
-    Plotly.newPlot(elementId, data, layout, config);
+    // 提取計算 Y 軸範圍的共用函數
+    const getVisibleYRange = (plotData, xRange) => {
+        if (!xRange || !xRange[0] || !xRange[1]) return null;
+        
+        const parseDateFallback = (d) => {
+            if (!d) return NaN;
+            if (typeof d === 'string') {
+                return new Date(d.replace(' ', 'T')).getTime();
+            }
+            return new Date(d).getTime();
+        };
+
+        const x0 = parseDateFallback(xRange[0]);
+        const x1 = parseDateFallback(xRange[1]);
+        
+        if (isNaN(x0) || isNaN(x1)) return null;
+
+        let yMin = Infinity;
+        let yMax = -Infinity;
+
+        plotData.forEach(trace => {
+            if (trace.visible === 'legendonly' || trace.visible === false) return;
+            if (!trace.x || !trace.y) return;
+            
+            // 加入緩存以避免在拖動 rangeslider 時大量重複解析日期造成卡頓
+            if (!trace._xTime) {
+                trace._xTime = trace.x.map(d => parseDateFallback(d));
+            }
+            
+            for (let i = 0; i < trace._xTime.length; i++) {
+                const t = trace._xTime[i];
+                if (t >= x0 && t <= x1) {
+                    const y = trace.y[i];
+                    if (y !== null && y !== undefined && !isNaN(y)) {
+                        if (y < yMin) yMin = y;
+                        if (y > yMax) yMax = y;
+                    }
+                }
+            }
+        });
+
+        if (yMin !== Infinity && yMax !== -Infinity) {
+            const margin = (yMax - yMin) * 0.05;
+            // 處理常數直線的情況，避免 margin 為 0 導致錯誤
+            const actualMargin = margin === 0 ? 1 : margin;
+            return [yMin - actualMargin, yMax + actualMargin];
+        }
+        return null;
+    };
+    
+    // 初次載入時，針對初始的 X 軸顯示範圍來計算 Y 軸尺度
+    if (layout.xaxis && layout.xaxis.range) {
+        const initialYRange = getVisibleYRange(data, layout.xaxis.range);
+        if (initialYRange) {
+            layout.yaxis = layout.yaxis || {};
+            layout.yaxis.range = initialYRange;
+            layout.yaxis.autorange = false;
+        }
+    }
+
+    Plotly.newPlot(elementId, data, layout, config).then(function(plotElement) {
+        let autoscaleTimeout = null;
+        
+        const autoscaleY = () => {
+            if (!plotElement.layout.xaxis || !plotElement.layout.xaxis.range) return;
+            const newYRange = getVisibleYRange(plotElement.data, plotElement.layout.xaxis.range);
+            
+            if (newYRange) {
+                const currentYRange = plotElement.layout.yaxis ? plotElement.layout.yaxis.range : null;
+                if (currentYRange && 
+                    Math.abs(currentYRange[0] - newYRange[0]) < 1e-6 && 
+                    Math.abs(currentYRange[1] - newYRange[1]) < 1e-6) {
+                    return;
+                }
+                // 使用 Plotly.relayout 更新 Y 軸
+                Plotly.relayout(plotElement, { 'yaxis.range': newYRange, 'yaxis.autorange': false });
+            }
+        };
+
+        const debouncedAutoscaleY = () => {
+            if (autoscaleTimeout) clearTimeout(autoscaleTimeout);
+            autoscaleTimeout = setTimeout(autoscaleY, 150);
+        };
+
+        // 監控 X 軸變化（如：縮放、拖動 Slider、點擊範圍按鈕）
+        plotElement.on('plotly_relayout', function(eventData) {
+            // 如果使用者手動調整了 Y 軸，則不自動覆蓋，尊重其操作
+            if (eventData['yaxis.range[0]'] !== undefined || 
+                eventData['yaxis.range'] !== undefined || 
+                eventData['yaxis.autorange'] !== undefined) {
+                return;
+            }
+            
+            const hasXChange = eventData['xaxis.range[0]'] !== undefined || 
+                               eventData['xaxis.range'] !== undefined || 
+                               eventData['xaxis.autorange'] === true;
+
+            if (hasXChange) {
+                // 使用 debounce 避免拖動過程中連續觸發重繪導致卡頓
+                debouncedAutoscaleY();
+            }
+        });
+
+        // 監控圖例點擊開啟/關閉線條，重新調整 Y 軸
+        plotElement.on('plotly_restyle', function() {
+            debouncedAutoscaleY();
+        });
+    });
 }
 
 /**
